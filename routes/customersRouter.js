@@ -6,12 +6,14 @@ const customerController = require('../controllers/customersController');
 
 //router params
 router.param('id', async (req, res, next, id) => {
-    const customerId = Number(id);
-    const customer = await Customer.findById(customerId);
-    if(customer) {
-        req.customerId = id;
-        next();
-    } else {
+    try {
+        const customer = await Customer.findById(id);
+        if(customer) {
+            req.customerId = id;
+            next();
+        } 
+    } catch (error) {
+        console.log(error.message);
         res.status(404).send("Customer not found");
     }
 });
