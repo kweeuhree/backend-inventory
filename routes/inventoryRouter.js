@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-const inventoryItem = require('../models/inventoryModel');
+const InventoryItem = require('../models/inventoryModel');
 const inventoryItemController = require('../controllers/inventoryController');
 
 //router params
 router.param('id', async (req, res, next, id) => {
-    const inventoryItemId = Number(id);
-    const inventoryItem = await inventoryItem.findById(inventoryItemId);
+    try {
+    const inventoryItem = await InventoryItem.findById(id);
     if(inventoryItem) {
-        req.InventoryItemId = id;
+        req.inventoryItemId = id;
         next();
-    } else {
+    } 
+    } catch (error) {
+        console.log(error.message);
         res.status(404).send("Inventory item not found");
     }
 });
